@@ -1,0 +1,29 @@
+/* Régua visual — ver ROTEIRO.md seção 4. Única fonte de cores, tipo e espaço. */
+:root {
+  --ink: #0a0a0a; --ink-2: #333336; --mute: #66666b; --faint: #9a9aa0;
+  --line: #c8c8cc; --line-2: #e5e5e7; --wash: #f4f4f5; --paper: #ffffff; --ground: #ededef;
+  --blue: #001f54; --blue-ink: #001f54; --blue-wash: #e8ecf4; --on-blue: #ffffff;
+  --ok: #1f6b45; --ok-wash: #e6f2eb; --warn: #8a5a00; --warn-wash: #fbf1dc; --bad: #9b1c1c; --bad-wash: #fbe7e7;
+  --grid: rgba(0, 0, 0, 0.045);
+
+  --sans: "Inter", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  --fs-12: 12px; --fs-13: 13px; --fs-15: 15px; --fs-18: 18px; --fs-24: 24px; --fs-32: 32px;
+
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s6: 24px; --s8: 32px; --s12: 48px;
+  --gutter: 16px; --radius: 2px; --touch: 44px;
+  --side-w: 240px; --tabbar-h: 60px; --max-w: 1120px;
+  color-scheme: light;
+}
+@media (min-width: 1024px) { :root { --gutter: 32px; } }
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --ink: #f2f2f4; --ink-2: #d0d0d6; --mute: #9c9ca6; --faint: #6e6e78;
+    --line: #3a3a42; --line-2: #2a2a31; --wash: #1a1a20; --paper: #121217; --ground: #0b0b0f;
+    --blue: #2c4f8f; --blue-ink: #9db6e8; --blue-wash: #16223a;
+    --ok: #7bcb9d; --ok-wash: #132a1e; --warn: #e6b45c; --warn-wash: #2c2311; --bad: #f08a8a; --bad-wash: #301616;
+    --grid: rgba(255, 255, 255, 0.05);
+  }
+}
