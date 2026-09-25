@@ -1,0 +1,23 @@
+name: Licenças
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  licencas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Testar o verificador
+        run: node scripts/check-licenses.test.mjs
+      - name: Instalar dependências (sem executar scripts de pacotes)
+        if: hashFiles('package.json') != ''
+        run: |
+          if [ -f package-lock.json ]; then npm ci --ignore-scripts; else npm install --ignore-scripts --no-audit --no-fund; fi
+      - name: Bloquear licenças copyleft
+        run: node scripts/check-licenses.mjs

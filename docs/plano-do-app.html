@@ -1,0 +1,620 @@
+<title>Frameworka App Blueprint</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0A0A0A; --ink-2:#333336; --mute:#66666B; --faint:#9A9AA0;
+  --line:#C8C8CC; --line-2:#E5E5E7; --wash:#F4F4F5; --paper:#FFFFFF; --ground:#EDEDEF;
+  --blue:#001F54; --blue-ink:#001F54; --blue-wash:#E8ECF4; --on-blue:#FFFFFF;
+  --grid:rgba(0,0,0,.045);
+  --ok:#1F6B45; --ok-wash:#E6F2EB; --warn:#8A5A00; --warn-wash:#FBF1DC; --bad:#9B1C1C; --bad-wash:#FBE7E7;
+  --sans:'Inter',Helvetica,Arial,sans-serif; --mono:'IBM Plex Mono',ui-monospace,Menlo,Consolas,monospace; --plex:'IBM Plex Sans','Inter',Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;
+  --ink:#F2F2F4; --ink-2:#D0D0D6; --mute:#9C9CA6; --faint:#6E6E78;
+  --line:#3A3A42; --line-2:#2A2A31; --wash:#1A1A20; --paper:#121217; --ground:#0B0B0F;
+  --blue:#2C4F8F; --blue-ink:#9DB6E8; --blue-wash:#16223A; --on-blue:#FFFFFF;
+  --grid:rgba(255,255,255,.05);
+  --ok:#7BCB9D; --ok-wash:#132A1E; --warn:#E6B45C; --warn-wash:#2C2311; --bad:#F08A8A; --bad-wash:#301616;
+}}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --ink:#F2F2F4; --ink-2:#D0D0D6; --mute:#9C9CA6; --faint:#6E6E78;
+  --line:#3A3A42; --line-2:#2A2A31; --wash:#1A1A20; --paper:#121217; --ground:#0B0B0F;
+  --blue:#2C4F8F; --blue-ink:#9DB6E8; --blue-wash:#16223A; --on-blue:#FFFFFF;
+  --grid:rgba(255,255,255,.05);
+  --ok:#7BCB9D; --ok-wash:#132A1E; --warn:#E6B45C; --warn-wash:#2C2311; --bad:#F08A8A; --bad-wash:#301616;
+}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;font-feature-settings:"ss01","cv11"}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:24px;padding-block:40px 96px}
+@media (max-width:560px){.wrap{padding-inline:16px}}
+.sheet{background:var(--paper);border:1px solid var(--line-2);padding:clamp(20px,4vw,56px);position:relative}
+.sheet+.sheet{margin-top:20px}
+.gridbg{position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(to right,var(--grid) 1px,transparent 1px),linear-gradient(to bottom,var(--grid) 1px,transparent 1px);background-size:44px 44px}
+.sheet>*{position:relative}
+.top{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap}
+.brand{font-weight:800;letter-spacing:.04em;font-size:15px}
+.meta,.tag{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+h1{font-size:clamp(36px,6vw,60px);line-height:.98;letter-spacing:-.025em;font-weight:800;margin:56px 0 0;text-wrap:balance}
+.rule{width:96px;height:2px;background:var(--blue);margin:28px 0}
+.lede{font-size:clamp(17px,2vw,20px);line-height:1.45;color:var(--ink-2);max-width:62ch;margin:0}
+h2{font-size:clamp(24px,3vw,32px);font-weight:800;letter-spacing:-.015em;line-height:1.1;margin:10px 0 14px;text-wrap:balance}
+h3{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin:28px 0 10px}
+p{margin:0 0 12px;max-width:68ch}
+.muted{color:var(--mute)}
+code,.code{font-family:var(--mono);font-size:.86em;color:var(--blue-ink)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px}
+.callout{border-left:3px solid var(--blue);background:var(--wash);padding:16px 20px;margin:18px 0}
+.callout .tag{color:var(--blue-ink);display:block;margin-bottom:4px}
+.callout.dark{border-left-color:var(--ink)}
+.callout.dark .tag{color:var(--ink)}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-family:var(--plex);font-size:13.5px;line-height:1.45}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line-2);vertical-align:top}
+thead th{font-family:var(--mono);font-weight:500;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);border-bottom:1.5px solid var(--ink)}
+td.code{white-space:nowrap}
+.pill{display:inline-block;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border:1px solid var(--line);border-radius:2px;color:var(--ink-2);white-space:nowrap}
+.pill.b{color:var(--blue-ink);border-color:var(--blue-ink)}
+.pill.k{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.pill.ok{color:var(--ok);border-color:var(--ok);background:var(--ok-wash)}
+.pill.warn{color:var(--warn);border-color:var(--warn);background:var(--warn-wash)}
+.pill.bad{color:var(--bad);border-color:var(--bad);background:var(--bad-wash)}
+.pill.no{color:var(--faint);border-style:dashed}
+/* verdict */
+.verdict{display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:start;border-top:1.5px solid var(--ink);padding-top:18px}
+.verdict .big{font-weight:800;font-size:44px;line-height:1;letter-spacing:-.02em;color:var(--blue-ink)}
+@media (max-width:560px){.verdict{grid-template-columns:1fr}}
+ul.clean{list-style:none;padding:0;margin:0;display:grid;gap:8px}
+ul.clean li{padding-left:18px;position:relative;max-width:68ch}
+ul.clean li::before{content:"";position:absolute;left:0;top:.72em;width:9px;height:1.5px;background:var(--blue-ink)}
+/* flow */
+.flow{display:grid;grid-template-columns:repeat(7,minmax(120px,1fr));gap:0;min-width:900px;border-top:1.5px solid var(--ink)}
+.step{padding:14px 14px 16px;border-right:1px solid var(--line-2)}
+.step:last-child{border-right:0}
+.step .n{font-family:var(--mono);font-size:11px;color:var(--blue-ink);letter-spacing:.1em}
+.step b{display:block;margin:6px 0 4px;font-size:14.5px;letter-spacing:-.005em}
+.step span{font-size:12.5px;color:var(--mute);line-height:1.4;display:block}
+/* single source diagram */
+.src{display:grid;grid-template-columns:1fr 1.1fr 1fr;gap:18px;align-items:stretch;min-width:820px}
+.box{border:1px solid var(--line);background:var(--paper);padding:14px 16px}
+.box .tag{margin-bottom:8px;display:block}
+.box.core{border:1.5px solid var(--blue-ink);background:var(--blue-wash)}
+.row{display:flex;justify-content:space-between;gap:10px;font-size:13px;padding:6px 0;border-bottom:1px dotted var(--line)}
+.row:last-child{border-bottom:0}
+.row .k{font-family:var(--mono);font-size:11.5px;color:var(--blue-ink)}
+.row .v{color:var(--mute);font-family:var(--mono);font-size:11px;white-space:nowrap}
+.arrowcol{display:flex;flex-direction:column;gap:8px}
+/* wireframes */
+.screen{margin-top:34px}
+.screen-head{display:flex;gap:14px;align-items:baseline;flex-wrap:wrap;margin-bottom:10px}
+.screen-head .code{font-size:12px}
+.screen-head b{font-size:18px;letter-spacing:-.01em}
+.frame{border:1px solid var(--line);background:var(--paper);min-width:760px;font-size:12.5px;box-shadow:0 18px 40px -28px rgba(0,0,0,.35)}
+.chrome{display:flex;gap:6px;align-items:center;padding:8px 12px;border-bottom:1px solid var(--line-2);background:var(--wash)}
+.chrome i{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.chrome span{margin-left:10px;font-family:var(--mono);font-size:10.5px;color:var(--faint)}
+.app{display:grid;grid-template-columns:200px 1fr;min-height:360px}
+.side{border-right:1px solid var(--line-2);padding:14px 0;display:flex;flex-direction:column;gap:2px;background:var(--paper)}
+.side .org{margin:0 12px 12px;border:1px solid var(--line);padding:8px 10px}
+.side .org small{display:block;font-family:var(--mono);font-size:9.5px;color:var(--mute);letter-spacing:.08em;text-transform:uppercase}
+.side .org b{font-size:12.5px}
+.nav{padding:7px 16px;color:var(--ink-2);display:flex;justify-content:space-between;align-items:center;border-left:2px solid transparent}
+.nav.on{border-left-color:var(--blue-ink);background:var(--blue-wash);color:var(--ink);font-weight:600}
+.nav .cnt{font-family:var(--mono);font-size:10px;padding:0 5px;border:1px solid var(--bad);color:var(--bad)}
+.side .sep{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--faint);padding:12px 16px 4px;text-transform:uppercase}
+.main{padding:18px 22px;background:var(--paper)}
+.main h4{margin:0 0 2px;font-size:19px;letter-spacing:-.01em}
+.bar{height:6px;background:var(--line-2);margin:8px 0 4px}
+.bar i{display:block;height:100%;background:var(--blue-ink)}
+.card{border:1px solid var(--line-2);padding:12px 14px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.field{margin-bottom:10px}
+.field label{display:flex;gap:8px;align-items:center;justify-content:space-between;font-size:11.5px;color:var(--mute);margin-bottom:4px}
+.input{border:1px solid var(--line);padding:7px 9px;font-size:12.5px;color:var(--ink);background:var(--paper)}
+.input.fill{border-color:var(--blue-ink)}
+.input.sug{border:1px dashed var(--warn);background:var(--warn-wash)}
+.btn{display:inline-block;background:var(--ink);color:var(--paper);padding:7px 12px;font-weight:600;font-size:12px}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.blue{background:var(--blue);color:var(--on-blue)}
+.tiny{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+.l{height:6px;background:var(--line-2);margin:5px 0}
+.l.s{width:60%}
+.hl{background:var(--blue-wash);color:var(--blue-ink);padding:0 3px;font-weight:600}
+.gap{border-bottom:1.5px dashed var(--warn);color:var(--warn);padding:0 2px}
+.drop{border:1.5px dashed var(--line);padding:14px;text-align:center;color:var(--mute)}
+.login{display:grid;grid-template-columns:1fr 1fr;min-height:360px}
+.login .dark{background:var(--blue);color:var(--on-blue);padding:28px;position:relative;display:flex;flex-direction:column;justify-content:flex-end}
+.login .dark .gridbg{background-image:linear-gradient(to right,rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(to bottom,rgba(255,255,255,.07) 1px,transparent 1px);background-size:28px 28px}
+.login .dark>*{position:relative}
+.login .dark .t{font-weight:800;font-size:30px;line-height:1;letter-spacing:-.02em}
+.login .dark .tiny{color:rgba(255,255,255,.6)}
+.finding{display:grid;grid-template-columns:4px 1fr auto;gap:12px;border:1px solid var(--line-2);margin-bottom:8px}
+.finding .sv{background:var(--bad)}
+.finding .sv.w{background:var(--warn)}
+.finding .sv.i{background:var(--blue-ink)}
+.finding .body{padding:10px 0}
+.finding .act{padding:10px 12px;display:flex;gap:6px;align-items:center}
+.note{font-size:13px;color:var(--mute);margin-top:10px;max-width:74ch}
+.note b{color:var(--ink)}
+.ents{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.ent{border:1px solid var(--line);padding:12px 14px;background:var(--paper)}
+.ent.g{border-style:dashed}
+.ent b{font-family:var(--mono);font-size:13px;color:var(--blue-ink);font-weight:500}
+.ent .tiny{float:right}
+.ent ul{margin:8px 0 0;padding:0;list-style:none;font-family:var(--mono);font-size:11.5px;color:var(--ink-2);line-height:1.7}
+.ent p{font-size:12.5px;color:var(--mute);margin:6px 0 0}
+.phase{display:grid;grid-template-columns:90px 1fr;gap:16px;padding:14px 0;border-bottom:1px solid var(--line-2)}
+.phase .tag{padding-top:3px}
+.phase b{display:block;margin-bottom:4px}
+@media (max-width:560px){.phase{grid-template-columns:1fr;gap:4px}}
+.foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--line);margin-top:40px;padding-top:14px}
+:focus-visible{outline:2px solid var(--blue-ink);outline-offset:2px}
+</style>
+
+<div class="wrap">
+
+<!-- CAPA -->
+<section class="sheet">
+  <div class="gridbg"></div>
+  <div class="top"><div class="brand">FRAMEWORKA</div><div class="meta">App · Esboço v0.1 · Set/2026</div></div>
+  <h1>Um dado,<br>uma vez.</h1>
+  <div class="rule"></div>
+  <p class="lede">Plano do primeiro produto Frameworka: um SaaS que leva a clínica, do cadastro ao pacote de 15 documentos LGPD para saúde, mais a planilha ROPA. A empresa preenche cada informação uma única vez, e o app explica cada documento enquanto ele é montado.</p>
+  <div class="cols" style="margin-top:36px">
+    <div><div class="tag">Quem usa</div><b>Gestor da clínica + consultor convidado</b></div>
+    <div><div class="tag">Base</div><b>15 templates .md + ROPA</b></div>
+    <div><div class="tag">Regra de ouro</div><b>Nenhuma dependência AGPL/GPL</b></div>
+  </div>
+</section>
+
+<!-- STACK -->
+<section class="sheet" id="stack">
+  <span class="tag">01 · Stack</span>
+  <h2>Lovable + React + Postgres funciona?</h2>
+  <div class="verdict">
+    <div class="big">Sim.</div>
+    <div>
+      <p>O Lovable gera React + Vite + TypeScript + Tailwind + shadcn/ui, e o backend dele (Lovable Cloud) roda em cima do Supabase: Postgres, login, armazenamento de arquivos e funções de servidor. O código vai para o seu GitHub e é seu. Se um dia sair do Lovable, o mesmo código roda em Vercel + seu próprio Supabase sem reescrever nada.</p>
+      <p>Três cuidados que o Lovable não resolve sozinho:</p>
+      <ul class="clean">
+        <li><b>Isolamento entre empresas.</b> O Lovable escreve as regras de acesso (RLS), mas às vezes deixa brechas. Revise cada tabela à mão e mantenha um teste automático: "usuário da empresa A tenta ler a empresa B e recebe zero linhas".</li>
+        <li><b>Região dos dados.</b> Para um produto de LGPD em saúde, o argumento de venda pede dados no Brasil. Confirme a região do Lovable Cloud; se não for São Paulo, conecte um projeto Supabase seu em <code>sa-east-1</code>.</li>
+        <li><b>Chaves da IA.</b> A chave da API do Claude fica só nos secrets das Edge Functions, nunca no front.</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Licenças: tudo permissivo, nada que obrigue abrir seu código</h3>
+  <div class="scroll"><table>
+    <thead><tr><th>Peça</th><th>Usar</th><th>Licença</th><th>Evitar (e por quê)</th></tr></thead>
+    <tbody>
+      <tr><td>Interface</td><td>React, Vite, Tailwind, shadcn/ui, Radix</td><td><span class="pill ok">MIT</span></td><td class="muted">—</td></tr>
+      <tr><td>Banco / Auth / Arquivos</td><td>PostgreSQL, Supabase (hospedado)</td><td><span class="pill ok">PostgreSQL · MIT · Apache 2</span></td><td class="muted">MinIO para arquivos <span class="pill bad">AGPL</span></td></tr>
+      <tr><td>Preencher templates</td><td>mustache.js</td><td><span class="pill ok">MIT</span></td><td class="muted">—</td></tr>
+      <tr><td>Gerar Word</td><td>seu <code>build-docx.js</code> + JSZip (escolher a opção MIT)</td><td><span class="pill ok">MIT</span></td><td class="muted">JSZip é dual MIT/GPLv3: declare MIT</td></tr>
+      <tr><td>Gerar PDF</td><td>pdfmake ou o seu <code>build.js</code> (HTML → PDF)</td><td><span class="pill ok">MIT</span></td><td class="muted">iText, MuPDF, Ghostscript <span class="pill bad">AGPL</span> · pdftk <span class="pill bad">GPL</span></td></tr>
+      <tr><td>OCR</td><td>Claude (visão) numa Edge Function; Tesseract.js como plano B</td><td><span class="pill ok">API · Apache 2</span></td><td class="muted">—</td></tr>
+      <tr><td>Métricas / BI</td><td>PostHog Cloud ou Supabase logs</td><td><span class="pill ok">SaaS</span></td><td class="muted">Metabase, Grafana, Plausible self-host <span class="pill bad">AGPL</span></td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Automatize a regra: um passo no GitHub Actions com <code>npx license-checker --failOn "GPL;AGPL;LGPL"</code> bloqueia qualquer pacote novo com licença copyleft antes de entrar no código.</p>
+</section>
+
+<!-- DADO UNICO -->
+<section class="sheet" id="dados">
+  <span class="tag">02 · A ideia central</span>
+  <h2>Uma ficha da empresa alimenta os 15 documentos</h2>
+  <p>Hoje os templates escrevem o mesmo dado de vários jeitos: <code>[NOME_DA_CLÍNICA]</code> aparece 11 vezes, e ainda existem <code>[NOME DA CLÍNICA/HOSPITAL]</code>, <code>[NOME DA ORGANIZAÇÃO]</code>, <code>[EMPRESA]</code>, <code>[CLÍNICA/HOSPITAL]</code>. O DPO aparece como <code>[NOME_DO_DPO]</code>, <code>[Nome DPO]</code> e <code>[Nome — DPO]</code>. O primeiro trabalho técnico é trocar todos por uma chave única do <b>dicionário de campos</b>. A partir daí, cada resposta preenche automaticamente todos os documentos que a usam.</p>
+  <div class="scroll" style="margin-top:20px"><div class="src">
+    <div class="arrowcol">
+      <div class="box"><span class="tag">De onde vem o dado</span>
+        <div class="row"><span>CNPJ digitado</span><span class="v">BrasilAPI</span></div>
+        <div class="row"><span>CEP</span><span class="v">ViaCEP</span></div>
+        <div class="row"><span>Contrato social, cartão CNPJ</span><span class="v">OCR / IA</span></div>
+        <div class="row"><span>Perguntas guiadas</span><span class="v">manual</span></div>
+        <div class="row"><span>Redação sugerida</span><span class="v">agente IA</span></div>
+      </div>
+    </div>
+    <div class="box core"><span class="tag" style="color:var(--blue-ink)">Dicionário de campos → Ficha da empresa</span>
+      <div class="row"><span class="k">empresa.razao_social</span><span class="v">13 docs</span></div>
+      <div class="row"><span class="k">empresa.cnpj</span><span class="v">11 docs</span></div>
+      <div class="row"><span class="k">empresa.endereco</span><span class="v">9 docs</span></div>
+      <div class="row"><span class="k">dpo.nome · dpo.email · dpo.telefone</span><span class="v">10 docs</span></div>
+      <div class="row"><span class="k">diretor_medico.nome · .crm</span><span class="v">4 docs</span></div>
+      <div class="row"><span class="k">operacao.telemedicina</span><span class="v">sim/não</span></div>
+      <div class="row"><span class="k">operacao.usa_ia</span><span class="v">sim/não</span></div>
+      <div class="row"><span class="k">operacao.transferencia_internacional</span><span class="v">sim/não</span></div>
+      <div class="row"><span class="k">sistemas[] · fornecedores[]</span><span class="v">listas</span></div>
+    </div>
+    <div class="box"><span class="tag">Template (com chaves)</span>
+      <div style="font-family:var(--mono);font-size:11.5px;line-height:1.7;color:var(--ink-2)">
+        Esta Política descreve como a <span class="hl">{{empresa.razao_social}}</span>, CNPJ <span class="hl">{{empresa.cnpj}}</span>…<br><br>
+        <span style="color:var(--blue-ink)">{{#operacao.telemedicina}}</span><br>
+        &nbsp;4.7 Telemedicina e teleconsultas…<br>
+        <span style="color:var(--blue-ink)">{{/operacao.telemedicina}}</span>
+      </div>
+    </div>
+  </div></div>
+  <p class="note">As perguntas <b>sim/não</b> fazem duas coisas: ligam ou desligam seções inteiras dentro dos documentos (telemedicina, IA, transferência internacional, que já aparecem como OPÇÃO 1 e OPÇÃO 2 nos templates) e decidem quais documentos a empresa precisa. Quem não faz telemedicina nem vê o Termo de Telemedicina como pendência.</p>
+</section>
+
+<!-- JORNADA -->
+<section class="sheet" id="jornada">
+  <span class="tag">03 · Jornada</span>
+  <h2>Do login ao pacote completo</h2>
+  <div class="scroll"><div class="flow">
+    <div class="step"><span class="n">01</span><b>Entrar</b><span>E-mail + senha ou link mágico. Convite de consultor cai aqui.</span></div>
+    <div class="step"><span class="n">02</span><b>CNPJ</b><span>Digita o CNPJ, a Receita preenche razão social, endereço e CNAE. Só confirma.</span></div>
+    <div class="step"><span class="n">03</span><b>Ficha</b><span>5 blocos curtos. Cada pergunta mostra em quantos documentos será usada.</span></div>
+    <div class="step"><span class="n">04</span><b>Documentos</b><span>Catálogo com status. Cada documento pede só o que ainda falta.</span></div>
+    <div class="step"><span class="n">05</span><b>Revisar</b><span>O app aponta divergências entre documentos antes de aprovar.</span></div>
+    <div class="step"><span class="n">06</span><b>Exportar</b><span>Word e PDF no padrão visual Frameworka, com versão e data.</span></div>
+    <div class="step"><span class="n">07</span><b>Manter</b><span>Mudou o DPO? Os documentos afetados ficam marcados como desatualizados.</span></div>
+  </div></div>
+  <div class="callout"><span class="tag">Como o app ensina</span>O ensino acontece dentro do fluxo: cada pergunta tem um "por que pedimos isso" de uma linha, com o artigo da LGPD; cada documento abre com uma ficha explicativa; cada divergência explica o risco. Uma área separada de curso fica para a Fase 2 (vocês já têm a ementa pronta em <i>Cursos - F2</i>).</div>
+</section>
+
+<!-- MENU -->
+<section class="sheet" id="menu">
+  <span class="tag">04 · Menu</span>
+  <h2>Seis itens, na ordem do trabalho</h2>
+  <div class="cols">
+    <div>
+      <div class="scroll"><table>
+        <thead><tr><th>Item</th><th>O que tem</th></tr></thead>
+        <tbody>
+          <tr><td><b>[Seletor de empresa]</b></td><td>Topo da barra. O gestor vê só a própria empresa; o consultor troca entre as clientes.</td></tr>
+          <tr><td><b>Início</b></td><td>Progresso, próximo passo sugerido, alertas.</td></tr>
+          <tr><td><b>Minha empresa</b></td><td>"Meus dados": ficha em blocos + arquivos enviados.</td></tr>
+          <tr><td><b>Criar documentos</b></td><td>Catálogo dos 15, agrupados por família, com status de cada um.</td></tr>
+          <tr><td><b>Meus documentos</b></td><td>Gerados, versões, aprovação, download, próxima revisão.</td></tr>
+          <tr><td><b>Revisão</b></td><td>Divergências e lacunas, com contador vermelho.</td></tr>
+          <tr><td class="muted">Rodapé</td><td class="muted">Equipe e acessos · Plano · Minha conta · Sair</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div>
+      <h3 style="margin-top:0">Blocos da ficha (Minha empresa)</h3>
+      <ul class="clean">
+        <li><b>Identificação</b>: razão social, fantasia, CNPJ, CNAE, endereço, cidade, telefone, site, logo.</li>
+        <li><b>Pessoas-chave</b>: responsável legal, DPO/encarregado, diretor médico + CRM, responsável de TI.</li>
+        <li><b>Operação</b>: tipo de serviço, especialidades, telemedicina, IA, pesquisa, atende menores, convênios, transferência internacional.</li>
+        <li><b>Sistemas e fornecedores</b>: prontuário eletrônico, plataforma de telemedicina, nuvem, laboratório parceiro, contabilidade. Para cada um: que dados acessa, país, se há contrato.</li>
+        <li><b>Segurança</b>: backup, senhas, controle de acesso, canal de incidentes, horário de atendimento ao titular.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- TELAS -->
+<section class="sheet" id="telas">
+  <span class="tag">05 · Telas</span>
+  <h2>Esboços</h2>
+  <p class="muted">Wireframes de baixa fidelidade com a identidade do Guia (Inter, Plex Mono, filete azul #001F54, grid técnico). Dados de exemplo.</p>
+
+  <!-- LOGIN -->
+  <div class="screen">
+    <div class="screen-head"><span class="code">T-01</span><b>Login</b><span class="muted">sem cadastro aberto sem convite ou plano: o signup é o início do teste grátis</span></div>
+    <div class="scroll"><div class="frame">
+      <div class="chrome"><i></i><i></i><i></i><span>app.frameworka.com.br/entrar</span></div>
+      <div class="login">
+        <div class="main" style="padding:32px 36px;display:flex;flex-direction:column;justify-content:center">
+          <div class="brand">FRAMEWORKA</div>
+          <div style="font-size:24px;font-weight:800;letter-spacing:-.015em;margin:26px 0 16px">Entrar</div>
+          <div class="field"><label>E-mail</label><div class="input">gestao@clinicavitta.com.br</div></div>
+          <div class="field"><label>Senha <span class="tiny" style="text-transform:none;letter-spacing:0">Esqueci a senha</span></label><div class="input">••••••••••</div></div>
+          <div style="display:flex;gap:8px;margin-top:6px"><span class="btn">Entrar</span><span class="btn ghost">Receber link por e-mail</span></div>
+          <div class="tiny" style="margin-top:22px">Ainda não tem conta? Começar teste de 14 dias</div>
+        </div>
+        <div class="dark"><div class="gridbg"></div>
+          <div class="tiny">Arquitetura de conformidade</div>
+          <div class="t" style="margin-top:10px">LGPD da sua clínica,<br>documento por documento.</div>
+          <div style="width:60px;height:2px;background:#fff;margin:18px 0 10px"></div>
+          <div class="tiny">15 documentos · Lei 13.709/2018 · CFM</div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- CNPJ -->
+  <div class="screen">
+    <div class="screen-head"><span class="code">T-02</span><b>Primeiro acesso: criar empresa</b><span class="muted">um campo, o resto vem da Receita</span></div>
+    <div class="scroll"><div class="frame">
+      <div class="chrome"><i></i><i></i><i></i><span>app.frameworka.com.br/nova-empresa</span></div>
+      <div class="main" style="padding:28px 36px;display:grid;grid-template-columns:1fr 1.1fr;gap:28px">
+        <div>
+          <div class="tiny">Passo 1 de 3</div>
+          <div style="font-size:22px;font-weight:800;letter-spacing:-.015em;margin:8px 0 6px">Qual o CNPJ da clínica?</div>
+          <p class="muted" style="font-size:12.5px">Buscamos os dados públicos na Receita Federal. Você só confere.</p>
+          <div class="input fill" style="font-family:var(--mono);font-size:15px;padding:10px 12px">12.345.678/0001-90</div>
+          <div class="tiny" style="margin-top:14px">ou envie o cartão CNPJ em PDF</div>
+        </div>
+        <div class="card" style="border-color:var(--blue-ink)">
+          <div class="tiny" style="color:var(--blue-ink)">Encontrado na Receita Federal</div>
+          <div class="row"><span>Razão social</span><b>Clínica Vitta Saúde Integrada Ltda</b></div>
+          <div class="row"><span>Nome fantasia</span><b>Clínica Vitta</b></div>
+          <div class="row"><span>CNAE</span><b>8630-5/03 · Atividade médica ambulatorial</b></div>
+          <div class="row"><span>Endereço</span><b>R. Harmonia, 410 · São Paulo/SP</b></div>
+          <div style="display:flex;gap:8px;margin-top:12px"><span class="btn">Está certo, continuar</span><span class="btn ghost">Corrigir</span></div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- INICIO -->
+  <div class="screen">
+    <div class="screen-head"><span class="code">T-03</span><b>Início</b><span class="muted">sempre responde "o que eu faço agora?"</span></div>
+    <div class="scroll"><div class="frame">
+      <div class="chrome"><i></i><i></i><i></i><span>app.frameworka.com.br/inicio</span></div>
+      <div class="app">
+        <div class="side">
+          <div class="org"><small>Empresa ▾</small><b>Clínica Vitta</b></div>
+          <div class="nav on">Início</div>
+          <div class="nav">Minha empresa</div>
+          <div class="nav">Criar documentos</div>
+          <div class="nav">Meus documentos</div>
+          <div class="nav">Revisão <span class="cnt">3</span></div>
+          <div class="sep">Conta</div>
+          <div class="nav">Equipe e acessos</div>
+          <div class="nav">Plano</div>
+        </div>
+        <div class="main">
+          <div class="tiny">Quinta, 25 set</div>
+          <h4>Sua conformidade LGPD</h4>
+          <div class="g3" style="margin-top:14px">
+            <div class="card"><div class="tiny">Ficha da empresa</div><div style="font-size:24px;font-weight:800">72%</div><div class="bar"><i style="width:72%"></i></div><div class="muted" style="font-size:11.5px">faltam 9 respostas</div></div>
+            <div class="card"><div class="tiny">Documentos</div><div style="font-size:24px;font-weight:800">4 <span class="muted" style="font-size:14px;font-weight:500">de 11</span></div><div class="bar"><i style="width:36%"></i></div><div class="muted" style="font-size:11.5px">2 não se aplicam</div></div>
+            <div class="card"><div class="tiny">Revisão</div><div style="font-size:24px;font-weight:800;color:var(--bad)">3</div><div class="muted" style="font-size:11.5px;margin-top:10px">divergências abertas</div></div>
+          </div>
+          <div class="card" style="margin-top:12px;border-color:var(--ink);display:flex;justify-content:space-between;align-items:center;gap:12px">
+            <div><div class="tiny">Próximo passo</div><b style="font-size:14px">Cadastre o sistema de prontuário eletrônico</b><div class="muted" style="font-size:11.5px">Desbloqueia a Política de Segurança e o RIPD · 3 min</div></div>
+            <span class="btn">Responder</span>
+          </div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- FICHA -->
+  <div class="screen">
+    <div class="screen-head"><span class="code">T-04</span><b>Minha empresa (Meus dados)</b><span class="muted">cada campo diz de onde veio e onde é usado</span></div>
+    <div class="scroll"><div class="frame">
+      <div class="chrome"><i></i><i></i><i></i><span>app.frameworka.com.br/empresa/pessoas</span></div>
+      <div class="app">
+        <div class="side">
+          <div class="org"><small>Empresa ▾</small><b>Clínica Vitta</b></div>
+          <div class="nav">Início</div>
+          <div class="nav on">Minha empresa</div>
+          <div class="nav">Criar documentos</div>
+          <div class="nav">Meus documentos</div>
+          <div class="nav">Revisão <span class="cnt">3</span></div>
+        </div>
+        <div class="main">
+          <div style="display:flex;gap:16px;border-bottom:1px solid var(--line-2);padding-bottom:8px;margin-bottom:14px;font-size:12px">
+            <span class="muted">Identificação ✓</span><b style="border-bottom:2px solid var(--blue-ink);padding-bottom:6px">Pessoas-chave</b><span class="muted">Operação</span><span class="muted">Sistemas</span><span class="muted">Segurança</span><span class="muted">Arquivos</span>
+          </div>
+          <div class="g2">
+            <div>
+              <div class="field"><label>Encarregado (DPO) <span class="pill b">usado em 10 docs</span></label><div class="input fill">Marina Duarte</div></div>
+              <div class="field"><label>E-mail do DPO <span class="pill b">10 docs</span></label><div class="input fill">dpo@clinicavitta.com.br</div></div>
+              <div class="field"><label>Diretor médico + CRM <span class="pill warn">sugestão</span></label><div class="input sug">Dr. Paulo Nery · CRM-SP 123456</div>
+                <div class="tiny" style="text-transform:none;letter-spacing:0;margin-top:4px">Lido de contrato-social.pdf, pág. 2 · <b style="color:var(--ink)">Confirmar</b> · Editar</div></div>
+            </div>
+            <div class="card" style="background:var(--wash)">
+              <div class="tiny" style="color:var(--blue-ink)">Por que pedimos isso</div>
+              <p style="font-size:12.5px;margin:6px 0">A LGPD exige que a clínica indique um encarregado e divulgue o contato dele de forma clara (Art. 41). Pode ser um funcionário ou um serviço externo.</p>
+              <div class="tiny">Aparece em: Política de Privacidade, Governança, Incidentes, Direitos dos Titulares +6</div>
+              <div class="drop" style="margin-top:12px">Arraste contrato social, cartão CNPJ ou contratos de fornecedores.<br><span class="tiny">Lemos e sugerimos. Nada entra sem sua confirmação.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- CATALOGO -->
+  <div class="screen">
+    <div class="screen-head"><span class="code">T-05</span><b>Criar documentos</b><span class="muted">o status sai da ficha, não de uma lista manual</span></div>
+    <div class="scroll"><div class="frame">
+      <div class="chrome"><i></i><i></i><i></i><span>app.frameworka.com.br/documentos</span></div>
+      <div class="app">
+        <div class="side">
+          <div class="org"><small>Empresa ▾</small><b>Clínica Vitta</b></div>
+          <div class="nav">Início</div><div class="nav">Minha empresa</div><div class="nav on">Criar documentos</div><div class="nav">Meus documentos</div><div class="nav">Revisão <span class="cnt">3</span></div>
+        </div>
+        <div class="main">
+          <div class="tiny">Políticas públicas</div>
+          <div class="row"><span><b>Política de Privacidade</b> <span class="muted">· site e recepção</span></span><span class="pill ok">Pronto para gerar</span></div>
+          <div class="row"><span><b>Direitos dos Titulares</b> <span class="muted">· procedimento</span></span><span class="pill ok">Gerado v1.0</span></div>
+          <div class="tiny" style="margin-top:12px">Governança interna</div>
+          <div class="row"><span><b>Política de Segurança da Informação</b></span><span class="pill warn">Faltam 3 dados</span></div>
+          <div class="row"><span><b>Resposta a Incidentes</b></span><span class="pill warn">Faltam 5 dados</span></div>
+          <div class="tiny" style="margin-top:12px">Termos</div>
+          <div class="row"><span><b>Consentimento para Telemedicina</b></span><span class="pill no">Não se aplica · sem telemedicina</span></div>
+          <div class="row"><span><b>Consentimento para uso de IA</b></span><span class="pill ok">Pronto para gerar</span></div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- DOCUMENTO -->
+  <div class="screen">
+    <div class="screen-head"><span class="code">T-06</span><b>Tela do documento</b><span class="muted">entender · completar · ver o resultado, lado a lado</span></div>
+    <div class="scroll"><div class="frame" style="min-width:900px">
+      <div class="chrome"><i></i><i></i><i></i><span>app.frameworka.com.br/documentos/politica-seguranca</span></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1.25fr;min-height:380px">
+        <div class="main" style="border-right:1px solid var(--line-2);background:var(--wash)">
+          <div class="tiny">FRW-L04 · Governança</div>
+          <h4 style="margin-top:4px">Política de Segurança da Informação</h4>
+          <div style="width:40px;height:2px;background:var(--blue-ink);margin:10px 0"></div>
+          <div class="tiny" style="margin-top:10px">O que é</div><p style="font-size:12px">As regras de como a clínica protege sistemas, senhas, equipamentos e prontuários.</p>
+          <div class="tiny">Para que serve</div><p style="font-size:12px">É o que você mostra à ANPD, a convênios e a parceiros quando perguntam "como vocês protegem os dados?".</p>
+          <div class="tiny">Por que importa</div><p style="font-size:12px">Art. 46 da LGPD. Sem ela, um incidente vira presunção de negligência.</p>
+          <div class="tiny">Quem assina · Revisão</div><p style="font-size:12px">Direção + DPO · a cada 12 meses</p>
+        </div>
+        <div class="main" style="border-right:1px solid var(--line-2)">
+          <div class="tiny">Só o que falta · 3 perguntas</div>
+          <div class="field" style="margin-top:10px"><label>Com que frequência é feito o backup?</label><div class="input">Diário às 02h</div></div>
+          <div class="field"><label>Gerenciador de senhas usado</label><div class="input">1Password</div></div>
+          <div class="field"><label>Prazo para bloquear acesso de quem sai</label><div class="input" style="color:var(--faint)">ex.: 4 horas</div></div>
+          <div class="tiny" style="margin-top:14px">Já preenchido pela ficha · 14 campos ▸</div>
+          <div style="margin-top:16px;display:flex;gap:8px"><span class="btn">Gerar v1.0</span><span class="btn ghost">Salvar rascunho</span></div>
+        </div>
+        <div class="main">
+          <div class="tiny">Prévia ao vivo</div>
+          <div class="card" style="margin-top:8px;font-size:11.5px;line-height:1.6">
+            <div style="display:flex;justify-content:space-between"><b style="letter-spacing:.04em">CLÍNICA VITTA</b><span class="tiny">FRW-L04 · v1.0</span></div>
+            <div style="font-weight:800;font-size:14px;margin-top:10px">Política de Segurança da Informação.</div>
+            <div style="width:30%;height:1.5px;background:var(--blue-ink);margin:8px 0"></div>
+            A <span class="hl">Clínica Vitta Saúde Integrada Ltda</span>, CNPJ <span class="hl">12.345.678/0001-90</span>, realiza backup <span class="hl">diário às 02h</span> e utiliza o gerenciador <span class="hl">1Password</span>. O acesso de colaboradores desligados é revogado em até <span class="gap">[prazo]</span>.
+            <div class="l"></div><div class="l"></div><div class="l s"></div>
+          </div>
+          <div class="tiny" style="margin-top:8px"><span class="hl">azul</span> = veio da ficha · <span class="gap">tracejado</span> = falta</div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- REVISAO -->
+  <div class="screen">
+    <div class="screen-head"><span class="code">T-07</span><b>Revisão</b><span class="muted">divergências entre documentos, com o risco explicado</span></div>
+    <div class="scroll"><div class="frame">
+      <div class="chrome"><i></i><i></i><i></i><span>app.frameworka.com.br/revisao</span></div>
+      <div class="main">
+        <div class="finding"><div class="sv"></div><div class="body"><b>O e-mail do DPO não é o mesmo em todos os documentos</b><div class="muted" style="font-size:11.5px">Política de Privacidade v1.0 usa dpo@vitta.com.br · a ficha diz dpo@clinicavitta.com.br. O titular pode escrever para um endereço morto.</div></div><div class="act"><span class="pill bad">Alta</span><span class="btn">Gerar v1.1</span></div></div>
+        <div class="finding"><div class="sv w"></div><div class="body"><b>Fornecedor sem cláusula de operador</b><div class="muted" style="font-size:11.5px">"MedCloud Prontuário" acessa dados de saúde e não tem Cláusulas Contratuais de Operador geradas (Art. 39).</div></div><div class="act"><span class="pill warn">Média</span><span class="btn ghost">Criar cláusulas</span></div></div>
+        <div class="finding"><div class="sv i"></div><div class="body"><b>Numeração fora de ordem</b><div class="muted" style="font-size:11.5px">Seção 4.7 (Telemedicina) está dentro do capítulo 5 da Política de Privacidade.</div></div><div class="act"><span class="pill b">Baixa</span><span class="btn ghost">Ajustar</span></div></div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- MEUS DOCS -->
+  <div class="screen">
+    <div class="screen-head"><span class="code">T-08</span><b>Meus documentos</b><span class="muted">cada versão guarda os dados usados para gerá-la</span></div>
+    <div class="scroll"><div class="frame">
+      <div class="chrome"><i></i><i></i><i></i><span>app.frameworka.com.br/meus-documentos</span></div>
+      <div class="main"><table>
+        <thead><tr><th>Documento</th><th>Versão</th><th>Status</th><th>Gerado</th><th>Próxima revisão</th><th></th></tr></thead>
+        <tbody>
+          <tr><td><b>Política de Privacidade</b></td><td class="code">v1.0</td><td><span class="pill warn">Desatualizado</span></td><td>12/09/2026</td><td>12/09/2027</td><td class="muted">Word · PDF · Histórico</td></tr>
+          <tr><td><b>Direitos dos Titulares</b></td><td class="code">v1.0</td><td><span class="pill ok">Aprovado</span></td><td>15/09/2026</td><td>15/09/2027</td><td class="muted">Word · PDF · Histórico</td></tr>
+          <tr><td><b>Consentimento para IA</b></td><td class="code">v0.2</td><td><span class="pill">Rascunho</span></td><td>24/09/2026</td><td>—</td><td class="muted">Continuar</td></tr>
+        </tbody>
+      </table>
+      <div class="tiny" style="margin-top:10px;text-transform:none;letter-spacing:0">"Desatualizado": o e-mail do DPO mudou na ficha depois que esta versão foi gerada.</div></div>
+    </div></div>
+  </div>
+</section>
+
+<!-- ENTIDADES -->
+<section class="sheet" id="entidades">
+  <span class="tag">06 · Dados</span>
+  <h2>Entidades e isolamento entre empresas</h2>
+  <p>Toda tabela da empresa carrega <code>org_id</code>. O Postgres recusa, no próprio banco, qualquer leitura ou escrita de quem não é membro daquela empresa (Row Level Security). Mesmo que o front tenha um bug, o banco não entrega dados de outra clínica. Arquivos seguem a mesma regra: ficam em <code>uploads/{org_id}/…</code> com política de acesso igual.</p>
+
+  <h3>Da empresa (isoladas por org_id)</h3>
+  <div class="ents">
+    <div class="ent"><b>organizations</b><span class="tiny">tenant</span><ul><li>id · razao_social · fantasia</li><li>cnpj (único) · cnae · tipo</li><li>plano · criado_em</li></ul></div>
+    <div class="ent"><b>memberships</b><span class="tiny">quem acessa</span><ul><li>user_id · org_id</li><li>papel: dono | editor |</li><li>&nbsp; consultor | leitor</li></ul><p>O consultor tem uma linha por cliente.</p></div>
+    <div class="ent"><b>invitations</b><ul><li>org_id · email · papel</li><li>token · expira_em</li></ul></div>
+    <div class="ent"><b>field_values</b><span class="tiny">a ficha</span><ul><li>org_id · field_key · valor (jsonb)</li><li>origem: manual | receita | cep |</li><li>&nbsp; upload | ia</li><li>upload_id · pagina</li><li>confirmado · atualizado_por/em</li></ul></div>
+    <div class="ent"><b>org_people</b><ul><li>org_id · papel (dpo, diretor_medico,</li><li>&nbsp; resp_legal, ti) · nome</li><li>email · telefone · crm · cpf</li></ul></div>
+    <div class="ent"><b>org_vendors</b><span class="tiny">sistemas + fornecedores</span><ul><li>org_id · nome · tipo</li><li>dados_acessados · pais</li><li>tem_contrato · documento_id</li></ul></div>
+    <div class="ent"><b>uploads</b><ul><li>org_id · caminho · tipo</li><li>status_leitura · extraido (jsonb)</li></ul></div>
+    <div class="ent"><b>documents</b><ul><li>org_id · template_id</li><li>status: rascunho | revisão |</li><li>&nbsp; aprovado · versao_atual</li><li>proxima_revisao</li></ul></div>
+    <div class="ent"><b>document_versions</b><ul><li>document_id · versao</li><li>template_version · markdown</li><li>snapshot_campos (jsonb)</li><li>aprovado_por · criado_em</li></ul><p>O snapshot é o que permite marcar "desatualizado".</p></div>
+    <div class="ent"><b>findings</b><span class="tiny">revisão</span><ul><li>org_id · document_id · regra</li><li>severidade · mensagem</li><li>status: aberta | resolvida | ignorada</li></ul></div>
+    <div class="ent"><b>audit_log</b><ul><li>org_id · ator · ação</li><li>entidade · antes/depois · em</li></ul><p>Só inserção. Num produto de conformidade, o histórico é prova.</p></div>
+  </div>
+
+  <h3>Globais (suas, só leitura para os clientes)</h3>
+  <div class="ents">
+    <div class="ent g"><b>field_definitions</b><ul><li>key · rótulo · tipo · bloco</li><li>ajuda ("por que pedimos")</li><li>artigo_lgpd · validação</li></ul></div>
+    <div class="ent g"><b>templates</b><ul><li>codigo (FRW-L01…) · titulo</li><li>familia · condicao (ex.: telemedicina)</li><li>o_que_e · para_que · por_que</li><li>quem_assina · revisao_meses</li></ul></div>
+    <div class="ent g"><b>template_versions</b><ul><li>template_id · versao</li><li>markdown com {{chaves}}</li><li>campos_usados (calculado)</li></ul></div>
+    <div class="ent g"><b>rules</b><ul><li>codigo · descrição · severidade</li><li>tipo: determinística | ia</li></ul></div>
+  </div>
+
+  <div class="callout dark"><span class="tag">Regra única de acesso</span>Uma função <code>is_member(org_id)</code> no banco, e toda política de toda tabela usa só ela. Um lugar para auditar, um lugar para corrigir. O teste "empresa A lê empresa B" roda a cada deploy.</div>
+  <p class="note">O app guarda dados <b>da empresa</b>, não de pacientes. Isso reduz muito o risco do próprio Frameworka. Mantenha assim: nenhum campo deve pedir dado de paciente.</p>
+</section>
+
+<!-- INTELIGENCIA -->
+<section class="sheet" id="ia">
+  <span class="tag">07 · Inteligência</span>
+  <h2>Autocompletar, ler arquivos e achar divergências</h2>
+  <div class="cols">
+    <div>
+      <h3 style="margin-top:0">Sem IA (Fase 1)</h3>
+      <ul class="clean">
+        <li>CNPJ → BrasilAPI; CEP → ViaCEP.</li>
+        <li>Chaves únicas nos templates: responder uma vez preenche tudo.</li>
+        <li>Perguntas sim/não ligam ou desligam documentos e seções.</li>
+        <li>Regras fixas de revisão: campo vazio, valor diferente entre versões, fornecedor sem contrato, documento condicional faltando, numeração quebrada, revisão vencida.</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="margin-top:0">Com IA (Fase 2, Claude via Edge Function)</h3>
+      <ul class="clean">
+        <li><b>Leitor de arquivos</b>: contrato social ou contrato de fornecedor vira sugestões de campo, com página de origem, sempre à espera de confirmação.</li>
+        <li><b>Redator</b>: adapta os trechos de texto livre (finalidades, descrição de sistemas) ao contexto da clínica, sem mexer nas cláusulas jurídicas travadas.</li>
+        <li><b>Revisor</b>: lê o pacote inteiro e aponta contradições de sentido que regra fixa não pega, por exemplo "a Política diz que não usamos IA, mas o Termo de IA foi gerado".</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout"><span class="tag">Trava de qualidade</span>A IA nunca grava direto na ficha nem no documento final. Tudo que ela produz aparece como sugestão (borda tracejada âmbar) até alguém confirmar. Isso protege a clínica e protege a sua responsabilidade técnica.</div>
+</section>
+
+<!-- TEMPLATES -->
+<section class="sheet" id="templates">
+  <span class="tag">08 · Catálogo inicial</span>
+  <h2>Os 15 templates + ROPA, organizados</h2>
+  <div class="scroll"><table>
+    <thead><tr><th>Código</th><th>Documento</th><th>Família</th><th>Quando se aplica</th><th>Linhas</th></tr></thead>
+    <tbody>
+      <tr><td class="code">FRW-L01</td><td>Política de Governança de Dados</td><td>Governança</td><td><span class="pill k">Sempre</span></td><td class="code">231</td></tr>
+      <tr><td class="code">FRW-L02</td><td>Política de Privacidade</td><td>Pública</td><td><span class="pill k">Sempre</span></td><td class="code">982</td></tr>
+      <tr><td class="code">FRW-L03</td><td>Procedimento de Direitos dos Titulares</td><td>Pública</td><td><span class="pill k">Sempre</span></td><td class="code">221</td></tr>
+      <tr><td class="code">FRW-L04</td><td>Política de Segurança da Informação</td><td>Governança</td><td><span class="pill k">Sempre</span></td><td class="code">281</td></tr>
+      <tr><td class="code">FRW-L05</td><td>Manual de Boas Práticas de Segurança</td><td>Governança</td><td><span class="pill k">Sempre</span></td><td class="code">314</td></tr>
+      <tr><td class="code">FRW-L06</td><td>Política de Retenção e Eliminação</td><td>Governança</td><td><span class="pill k">Sempre</span></td><td class="code">306</td></tr>
+      <tr><td class="code">FRW-L07</td><td>Política de Resposta a Incidentes</td><td>Governança</td><td><span class="pill k">Sempre</span></td><td class="code">610</td></tr>
+      <tr><td class="code">FRW-L08</td><td>RIPD · Relatório de Impacto</td><td>Avaliação</td><td><span class="pill b">Dado sensível em escala</span></td><td class="code">707</td></tr>
+      <tr><td class="code">FRW-L09</td><td>LIA · Legítimo Interesse</td><td>Avaliação</td><td><span class="pill b">Se usa legítimo interesse</span></td><td class="code">402</td></tr>
+      <tr><td class="code">FRW-L10</td><td>Cláusulas Contratuais de Operadores</td><td>Contratos</td><td><span class="pill b">1 por fornecedor</span></td><td class="code">796</td></tr>
+      <tr><td class="code">FRW-L11</td><td>Termo de Confidencialidade de Colaboradores</td><td>Contratos</td><td><span class="pill b">1 por colaborador</span></td><td class="code">236</td></tr>
+      <tr><td class="code">FRW-L12</td><td>Termo de Consentimento para Telemedicina</td><td>Termos</td><td><span class="pill">Se faz telemedicina</span></td><td class="code">277</td></tr>
+      <tr><td class="code">FRW-L13</td><td>Termo de Consentimento para IA</td><td>Termos</td><td><span class="pill">Se usa IA</span></td><td class="code">605</td></tr>
+      <tr><td class="code">FRW-L14</td><td>Política de Descarte Seguro de Dados</td><td>Governança</td><td><span class="pill k">Sempre</span></td><td class="code">≈330</td></tr>
+      <tr><td class="code">FRW-L15</td><td>Política de Gestão de Acessos e Senhas</td><td>Governança</td><td><span class="pill k">Sempre</span></td><td class="code">≈160</td></tr>
+      <tr><td class="code">FRW-L16</td><td>ROPA · Registro das Atividades de Tratamento</td><td>Inventário</td><td><span class="pill k">Sempre (planilha)</span></td><td class="code">xlsx</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note">Fonte: <code>02_Produto_Kit_LGPD_Saude/Templates_fonte_MD</code>. A ordem sugerida na tela segue a lógica de aprendizado: primeiro <b>Governança</b> (quem é o DPO, quem decide), depois o que o paciente vê, depois segurança e incidentes, por último avaliações e contratos. Os códigos FRW-L são uma sugestão; o Guia atual usa FRW-01 a 30 para documentos de qualidade ANVISA.</p>
+</section>
+
+<!-- FASES -->
+<section class="sheet" id="fases">
+  <span class="tag">09 · Ordem de construção</span>
+  <h2>Por onde começar a programar</h2>
+  <div class="phase"><span class="tag">Passo 0</span><div><b>Corrigir e normalizar os 15 templates</b>Aplicar primeiro as correções dos 4 pareceres de revisão (LIA, Cláusulas, Manual, Gestão de Acessos). Depois, trocar os colchetes por chaves do dicionário (<code>{{empresa.razao_social}}</code>) e as OPÇÃO 1/OPÇÃO 2 por blocos condicionais. Sai daqui o <code>field_definitions</code> (estimo 70 a 90 campos). É trabalho de texto, sem app, e dá para fazer comigo antes de abrir o Lovable.</div></div>
+  <div class="phase"><span class="tag">Fase 1</span><div><b>Esqueleto no Lovable</b>Login, criar empresa por CNPJ, menu, ficha em 5 blocos, catálogo, tela do documento com prévia, geração Word/PDF reaproveitando o seu <code>build-docx.js</code>, Meus documentos com versões. RLS + teste entre empresas.</div></div>
+  <div class="phase"><span class="tag">Fase 1.5</span><div><b>Revisão sem IA</b>Regras fixas de divergência, marcação de desatualizado, convite de consultor e seletor de empresa.</div></div>
+  <div class="phase"><span class="tag">Fase 2</span><div><b>Agente</b>Leitura de arquivos, redação adaptada, revisor de sentido. Cobrança por plano.</div></div>
+
+  <h3>Decisões que ficam com você</h3>
+  <ul class="clean">
+    <li>Fundir documentos que se sobrepõem? Descarte se sobrepõe a Retenção e Eliminação; Gestão de Acessos se sobrepõe a Segurança da Informação. Menos documentos significa menos divergência entre eles.</li><li>O ROPA vira tela do app (inventário de tratamentos que alimenta RIPD e Privacidade) ou continua como planilha exportada?</li>
+    <li>Quem aprova um documento: basta o dono da empresa, ou o consultor precisa assinar junto?</li>
+    <li>Modelo de cobrança: por empresa (o consultor paga por cliente) ou por consultor com N empresas?</li>
+    <li>O Word gerado sai com a marca Frameworka no rodapé ou só com a marca da clínica?</li>
+  </ul>
+
+  <div class="foot"><span class="tag">Frameworka · Arquitetura de conformidade</span><span class="tag">Esboço v0.1 · 25/09/2026</span></div>
+</section>
+
+</div>
